@@ -97,16 +97,16 @@ void search(intbtree** root, int v)
 
 void delete(intbtree** root)
 {
-if((*root)->left == NULL && (*root)->right == NULL)
-*root = NULL;
-else {
-intbtree** temp = NULL;
-while((*root)->left != NULL){
-temp = &((*root)->left);
-(*root)=(*root)->left;
-}
-delete(temp);
-}
+    if((*root)->left == NULL && (*root)->right == NULL)
+    *root = NULL;
+    else {
+        intbtree** temp = NULL;
+        while((*root)->left != NULL){
+            temp = &((*root)->left);
+            (*root)=(*root)->left;
+        }
+        delete(temp);
+    }
 }
 
 void delNode(intbtree** root, int value)
