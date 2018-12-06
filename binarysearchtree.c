@@ -1,3 +1,5 @@
+// you can make header files from this line
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -17,6 +19,8 @@ void delete(intbtree**);
 void delNode(intbtree**, int);
 void printTree(intbtree**, int);
 void deallocTree(intbtree**);
+
+// to this line.
 
 int main()
 {
