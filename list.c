@@ -15,10 +15,12 @@ typedef struct list {
     struct list *next;
 } list;
 
+bool isempty(list**);
 void insert(list**, int, int);
 list* find(list**, int);
 void erase(list**, int);
 void showlist(list**);
+void clear(list**);
 int size(list**);
 int at(list**, int);
 
@@ -36,6 +38,8 @@ int main(int argc, char *argv[])
         if(select == STOP)
             break;
         if(select == QUIT) {
+            printf("\nProgram will be terminated...\n");
+            clear(&root);
             exit(0);
         }
         switch(select){
@@ -63,6 +67,7 @@ int main(int argc, char *argv[])
                 break;
         }
     }
+    clear(&root);
     return EXIT_SUCCESS;
 }
 
@@ -70,7 +75,7 @@ int size(list** root)
 {
     int count=1;
     if((*root)==nullptr)
-        return count;
+        return 0;
     else {
         while((*root)->next != nullptr){
             (*root) = (*root)->next;
@@ -80,40 +85,56 @@ int size(list** root)
     return count;
 }
 
+bool isempty(list **root)
+{
+    return size(root)==0;
+}
+
+void clear(list **root)
+{
+    list *temp;
+    while((*root)!=nullptr){
+        temp = (*root);
+        (*root) = (*root)->next;
+        free(temp);
+    }
+    *root = nullptr;
+}
+
+
 int at(list** root, int i)
 {
     int count=0;
-    if((*root)==nullptr || i > size(root)){
+    if(isempty(root) || i > size(root)){
         fputs("out of range", stderr);
         exit(1);
     }
     else {
-        if(i==count)
-            return (*root)->data;
-        else{
-            while(count < i){
-                (*root) = (*root) -> next;
-                count++;
-            }
-            return (*root)->data;
+        while(count < i){
+            (*root) = (*root) -> next;
+            count++;
         }
+        return (*root)->data;
     }
 }
 
 list* find(list **root, int v)
 {
-    if((*root) == nullptr){
+    if(isempty(root)){
         return nullptr;
     }
     else {
-        list *p = (*root)->prev;
-        list *n = (*root)->next;
+        list *temp = (*root);
+        while(temp->data != v){
+            temp = temp->next;
+        }
+        return temp;
     }
 }
 
 void insert(list **root, int kth, int v)
 {
-    if((*root)==nullptr){
+    if(isempty(root)){
         (*root) = (list*)malloc(sizeof(list));
         (*root)->data = v;
         (*root)->prev = nullptr;
@@ -121,11 +142,14 @@ void insert(list **root, int kth, int v)
     }
     else {
         list* new = (list*)malloc(sizeof(list));
+        list* temp = (*root);
         new->data = v;
         if(kth >= size(root)){
-            (*root)->next = new;
-            new->prev = *root;
-            new->next = nullptr;
+            while(temp->next != nullptr)
+                temp = temp->next;
+            temp->next = new;
+            new->prev = temp;
+            new->next = (*root);
         }
         else {
             new->next = (*root)->next;
@@ -139,5 +163,12 @@ void insert(list **root, int kth, int v)
 
 void erase(list **root, int v)
 {
+    if(isempty(root)){
+        printf("list is empty.");
+        return;
+    }
+    else {
+        list *temp = find(root,v);
 
+    }
 }
