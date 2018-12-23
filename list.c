@@ -1,5 +1,5 @@
-
-// You can make header file from this line.
+// #ifndef __LIST_H__
+// #define __LIST_H__
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,15 +18,16 @@ typedef struct list {
 } list;
 
 bool isempty(list**);
+list* pos(list**, int);
 void insert(list**, int, int);
 list* find(list**, int);
 void erase(list**, int);
 void showlist(list**);
 void clear(list**);
 int size(list**);
-list* at(list**, int);
+int at(list**, int);
 
-// to this line.
+// #endif
 
 int main(int argc, char *argv[])
 {
@@ -48,12 +49,14 @@ int main(int argc, char *argv[])
             case INSERT:
                 printf("Enter input data and \'k\'th where you wanna input from head >>  ");
                 scanf("%d%d", &kth, &value);
+                if(root == nullptr)
+                    printf("list begin!\n");
                 insert(&root, kth, value);
                 break;
             case FIND:
                 printf("what number do you wanna find? >> ");
                 scanf("%d", &value);
-                if(find(&root, value))
+                if(find(&root, value) != nullptr)
                     printf("%d is in list!\n", find(&root,value)->data);
                 else
                     printf("Not found...\n");
@@ -87,7 +90,7 @@ int size(list** root)
     list *temp = (*root);
     if(temp == nullptr)
         return 0;
-    else if(temp->next == temp)
+    else if(temp->next == (*root))
         return 1;
     else {
         while(!temp->next->istail){
@@ -105,7 +108,7 @@ bool isempty(list **root)
 
 void clear(list **root)
 {
-    list *temp;
+    list *temp = nullptr;
     while(!(*root)->istail){
         temp = (*root);
         (*root) = (*root)->next;
@@ -114,21 +117,34 @@ void clear(list **root)
     free(*root);
 }
 
-
-list* at(list** root, int i)
-{
+list* pos(list** root, int i){
     int count=0;
     if(isempty(root) || i > size(root)){
         fputs("out of range", stderr);
         exit(EXIT_FAILURE);
     }
-    else {
+    else if(i==0){
+        while(!(*root)->ishead)
+            (*root) = (*root)->next;
+    }
+    else if(i>0) {
         while(count < i){
-            (*root) = (*root) -> next;
+            (*root) = (*root)->next;
             count++;
         }
-        return *root;
     }
+    else {
+        while(count < -i){
+            (*root) = (*root)->prev;
+            count++;
+        }
+    }
+    return *root;
+}
+
+int at(list** root, int i)
+{
+    return pos(root, i)->data;
 }
 
 list* find(list **root, int v)
@@ -138,9 +154,9 @@ list* find(list **root, int v)
     }
     else {
         list *temp = (*root);
-        while(temp->data != v){
+        while(temp->data != v)
             temp = temp->next;
-        }
+
         return temp;
     }
 }
@@ -148,17 +164,15 @@ list* find(list **root, int v)
 void insert(list **root, int kth, int v)
 {
     list* new = (list*)malloc(sizeof(list));
+    new->data = v;
     list* temp = *root;
     if(isempty(root)){
-        printf("list begin!\n");
-        (*root) = (list*)malloc(sizeof(list));
-        (*root)->data = v;
+        (*root) = new;
         (*root)->prev = (*root)->next = *root;
         (*root)->ishead = true;
         (*root)->istail = false;
     }
     else {
-        new->data = v;
         new->ishead = false;
         new->istail = true;
         if(size(root)==1){
@@ -166,7 +180,7 @@ void insert(list **root, int kth, int v)
             new->prev = new->next = *root;
         }
         else if(kth < size(root)){
-            temp = at(root, kth);
+            temp = pos(root, kth);
             new->istail = false;
             temp->next = new;
             new->prev = temp;
