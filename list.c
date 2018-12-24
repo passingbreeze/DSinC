@@ -52,6 +52,7 @@ int main(int argc, char *argv[])
                 if(root == nullptr)
                     printf("list begin!\n");
                 insert(&root, kth, value);
+                printf("%d elements in list\n", size(&root));
                 break;
             case FIND:
                 printf("what number do you wanna find? >> ");
@@ -164,20 +165,24 @@ list* find(list **root, int v)
 void insert(list **root, int kth, int v)
 {
     list* new = (list*)malloc(sizeof(list));
-    new->data = v;
     list* temp = *root;
+
+    new->data = v;
+    new->prev = nullptr;
+    new->next = nullptr;
+    new->ishead = false;
+    new->istail = true;
+
     if(isempty(root)){
+        new->ishead = true;
+        new->istail = false;
+        new->prev = new->next = new;
         (*root) = new;
-        (*root)->prev = (*root)->next = *root;
-        (*root)->ishead = true;
-        (*root)->istail = false;
     }
     else {
-        new->ishead = false;
-        new->istail = true;
         if(size(root)==1){
-            (*root)->prev = (*root)->next = new;
             new->prev = new->next = *root;
+            (*root)->prev = (*root)->next = new;
         }
         else if(kth < size(root)){
             temp = pos(root, kth);
@@ -196,7 +201,6 @@ void insert(list **root, int kth, int v)
             (*root)->prev = new;
         }
     }
-    printf("%d elements in list\n", size(root));
 }
 
 void erase(list **root, int v)

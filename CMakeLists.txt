@@ -4,4 +4,4 @@ project(DSinC)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_FLAGS "-Wall")
 
-add_executable(DSinC binarysearchtree.c)
+add_executable(DSinC list.c)
