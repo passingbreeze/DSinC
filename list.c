@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
         }
         switch(select){
             case INSERT:
-                printf("Enter input data and \'k\'th where you wanna input from head >>  ");
+                printf("Enter \'k\'th pos and input data >>  ");
                 scanf("%d%d", &kth, &value);
                 if(root == nullptr)
                     printf("list begin!\n");
@@ -175,14 +175,13 @@ void insert(list **root, int kth, int v)
 
     if(isempty(root)){
         new->ishead = true;
-        new->istail = false;
         new->prev = new->next = new;
-        (*root) = new;
+        *root = new;
     }
     else {
         if(size(root)==1){
             new->prev = new->next = *root;
-            (*root)->prev = (*root)->next = new;
+            temp->prev = temp->next = new;
         }
         else if(kth < size(root)){
             temp = pos(root, kth);
@@ -195,6 +194,7 @@ void insert(list **root, int kth, int v)
         else {
             while(!temp->istail)
                 temp = temp->next;
+            temp->istail = false;
             temp->next = new;
             new->prev = temp;
             new->next = (*root);
@@ -219,9 +219,10 @@ void erase(list **root, int v)
 
 void showlist(list** root)
 {
-    while(!(*root)->istail){
-        printf("%d -> ", (*root)->data);
-        (*root) = (*root)->next;
+    list *temp = *root;
+    while(!(temp->istail)){
+        printf("%d -> ", temp->data);
+        temp = temp->next;
     }
     printf("end\n");
 }
