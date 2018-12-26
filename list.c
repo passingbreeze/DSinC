@@ -178,7 +178,6 @@ void insert(list **root, int kth, int v)
         (*root)->ishead = true;
         (*root)->istail = true;
         (*root)->prev = (*root)->next = *root;
-
     }
     else {
         if(kth < size(root)){
@@ -189,7 +188,7 @@ void insert(list **root, int kth, int v)
             new->next = temp->next;
             temp->next->prev = new;
         }
-        else {
+        else { // need to modify
             while(!temp->istail)
                 temp = temp->next;
             temp->istail = false;
@@ -218,9 +217,11 @@ void erase(list **root, int v)
 void showlist(list** root)
 {
     list *temp = *root;
-    while(!(temp->istail)){
+    while(temp != nullptr){
         printf("%d -> ", temp->data);
         temp = temp->next;
+        if(temp->istail)
+            break;
     }
     printf("end\n");
 }
