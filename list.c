@@ -120,27 +120,28 @@ void clear(list **root)
 
 list* pos(list** root, int i){
     int count=0;
-    if(isempty(root) || i > size(root)){
+    list *temp = (*root);
+    if(isempty(&temp) || i > size(&temp)){
         fputs("out of range", stderr);
         exit(EXIT_FAILURE);
     }
     else if(i==0){
-        while(!(*root)->ishead)
-            (*root) = (*root)->next;
+        while(!temp->ishead)
+            temp = temp->next;
     }
     else if(i>0) {
         while(count < i){
-            (*root) = (*root)->next;
+            temp = temp->next;
             count++;
         }
     }
     else {
         while(count < -i){
-            (*root) = (*root)->prev;
+            temp = temp->prev;
             count++;
         }
     }
-    return *root;
+    return temp;
 }
 
 int at(list** root, int i)
@@ -168,22 +169,19 @@ void insert(list **root, int kth, int v)
     list* temp = *root;
 
     new->data = v;
-    new->prev = nullptr;
-    new->next = nullptr;
+    new->prev = new->next = nullptr;
     new->ishead = false;
     new->istail = true;
 
     if(isempty(root)){
-        new->ishead = true;
-        new->prev = new->next = new;
         *root = new;
+        (*root)->ishead = true;
+        (*root)->istail = true;
+        (*root)->prev = (*root)->next = *root;
+
     }
     else {
-        if(size(root)==1){
-            new->prev = new->next = *root;
-            temp->prev = temp->next = new;
-        }
-        else if(kth < size(root)){
+        if(kth < size(root)){
             temp = pos(root, kth);
             new->istail = false;
             temp->next = new;
