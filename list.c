@@ -189,8 +189,11 @@ void insert(list **root, int kth, int v)
             temp->next->prev = new;
         }
         else { // need to modify
-            while(!temp->istail)
+            while(!temp->istail){
+                printf("node data : %d\n", temp->data);
                 temp = temp->next;
+            }
+            printf("\nlist size = %d, tail? == %d\n", size(root), temp->istail);
             temp->istail = false;
             temp->next = new;
             new->prev = temp;
