@@ -167,6 +167,7 @@ void insert(list **root, int kth, int v)
 {
     list* new = (list*)malloc(sizeof(list));
     list* temp = *root;
+    int k = kth-1;
 
     new->data = v;
     new->prev = new->next = nullptr;
@@ -180,8 +181,8 @@ void insert(list **root, int kth, int v)
         (*root)->prev = (*root)->next = *root;
     }
     else {
-        if(kth < size(root)){
-            temp = pos(root, kth);
+        if(k < size(root)){
+            temp = pos(root, k);
             new->istail = false;
             temp->next = new;
             new->prev = temp;
@@ -193,7 +194,7 @@ void insert(list **root, int kth, int v)
                 printf("node data : %d\n", temp->data);
                 temp = temp->next;
             }
-            printf("\nlist size = %d, tail? == %d\n", size(root), temp->istail);
+            printf("\nlist size = %d, tail? == %d(1:true | 0:false)\n", size(root), temp->istail);
             temp->istail = false;
             temp->next = new;
             new->prev = temp;
